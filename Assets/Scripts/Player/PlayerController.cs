@@ -10,8 +10,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Range(0, 5)] private float upwardMobility;
     [SerializeField, Range(0, 5)] private float downwardMobility;
     [SerializeField, Range(0, 10)] private float jumpHeight;
+    [SerializeField, Range(0, 1)] private float getOffGroundTime = 0.1f;
     [SerializeField, Range(0, 30)] private float airVelocityChange;
     [SerializeField, Range(0, 1000)] private float velocityChange;
+    [SerializeField, Range(0, 2)] private float coyoteTime;
 
     private PlayerInput input;
     private Rigidbody2D rb;
@@ -27,6 +29,10 @@ public class PlayerController : MonoBehaviour
     private bool _isGrounded;
     private bool _isJumping = false;
     private float _velocityChange = 0f;
+
+    // Jump timers
+    private float _getOffGroundTime = 0f;
+    private float _coyoteTime = 0f;
 
     private Animator animator;
     private SpriteRenderer sRenderer; 
@@ -66,9 +72,12 @@ public class PlayerController : MonoBehaviour
         if(_isGrounded)
         {
             _velocityChange = velocityChange;
+            _coyoteTime = coyoteTime;
+
         } else
         {
             _velocityChange = airVelocityChange;
+            _coyoteTime -= Time.deltaTime;
         }
 
         Move();
@@ -81,14 +90,16 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         _velocity.x = Mathf.MoveTowards(_velocity.x, _moveInput * moveSpeed * Time.fixedDeltaTime, _velocityChange * Time.fixedDeltaTime);
-        //_velocity = new Vector2(_moveInput * moveSpeed * Time.fixedDeltaTime, _velocity.y);
     }
 
     private void Jump()
     {
 
         // How fast do we accelerate down?
-        if(_velocity.y > 0 && !_isGrounded)
+        if(_isGrounded)
+        {
+            rb.gravityScale = 0;
+        } else if(_velocity.y > 0 && !_isGrounded)
         {
             rb.gravityScale = upwardMobility;
             
@@ -101,25 +112,32 @@ public class PlayerController : MonoBehaviour
         }
 
         // Are we landing?
-        if(_isJumping && _isGrounded && _velocity.y <= 0)
+        if(_isJumping && _isGrounded && _getOffGroundTime <= 0)
         {
             _isJumping = false;
+        } else if(_isJumping && _isGrounded)
+        {
+            _getOffGroundTime -= Time.fixedDeltaTime;
         }
 
         // Are we initializing a jump?
-        if (_jumpDesired && _isGrounded)
+        if (_jumpDesired && (_isGrounded || _coyoteTime > 0))
         {
             _isJumping = true;
+            _getOffGroundTime = getOffGroundTime;
             _jumpSpeed = Mathf.Sqrt(-2f * Physics2D.gravity.y * jumpHeight * upwardMobility);
 
             _velocity.y = _jumpSpeed;
+        } else if(!_isJumping && _isGrounded)
+        {
+            //_velocity.y = 0;
         }
         _jumpDesired = false;
     }
 
     private void OnDrawGizmos()
     {
-        if(_isJumping)
+        if(_isGrounded)
         {
             Gizmos.color = Color.green;
         } else
