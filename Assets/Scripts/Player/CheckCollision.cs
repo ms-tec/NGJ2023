@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CheckCollision : MonoBehaviour
 {
+    [SerializeField, Range(0, 90)] private float maxSlopeAngle = 30;
+
     private bool grounded = false;
     private ContactPoint2D[] contacts = new ContactPoint2D[10];
 
@@ -32,7 +34,8 @@ public class CheckCollision : MonoBehaviour
         collision.GetContacts(contacts);
         foreach (ContactPoint2D contact in contacts)
         {
-            if (contact.normal == Vector2.up)
+            float angle = Vector2.Angle(contact.normal, Vector2.up);
+            if (angle < maxSlopeAngle)
             {
                 grounded = true;
             }
