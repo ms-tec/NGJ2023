@@ -695,7 +695,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2026269657}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 29.3, y: 20.8, z: -10}
+  m_LocalPosition: {x: 29.3, y: 18.4, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -719,5 +719,5 @@ MonoBehaviour:
   offsetSmoothing: 4
   offsetSensitivity: 0.5
   targetSize: 5
-  establishingShotDuration: 5
+  establishingShotDuration: 2
   establishingShotDelay: 2
