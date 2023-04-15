@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     private float _jumpSpeed;
     private Vector2 _velocity;
     private bool _isGrounded;
+    private bool _isJumping = false;
 
     private Animator animator;
     private SpriteRenderer sRenderer; 
@@ -42,8 +43,18 @@ public class PlayerController : MonoBehaviour
         input.Player.Jump.started += _ => _jumpDesired = true;
     }
 
-    private void update(){
-        animator.SetBool("Grounded", _isGrounded);
+    private void Update() {
+        animator.SetBool("Jumping", _isJumping);
+        animator.SetFloat("moveSpeed", Mathf.Abs(_moveInput));
+
+        if (_moveInput < 0)
+        {
+            sRenderer.flipX = true;
+        }
+        else if (_moveInput > 0)
+        {
+            sRenderer.flipX = false;
+        }
     }
 
     private void FixedUpdate()
@@ -53,34 +64,9 @@ public class PlayerController : MonoBehaviour
 
         Move();
         Jump();
-        Animate();
         
 
         rb.velocity = _velocity;
-    }
-
-    private void Animate()
-    {
-        Debug.Log(Mathf.Abs(_moveInput));
-        if (Mathf.Abs(_moveInput) < 0.1 && Mathf.Abs(_moveInput) > -0.1 ) {
-            animator.Play("Idle");
-            
-        }
-        else if (_moveInput < 0){
-            
-            //transform.scale = new Vector3(-1,1,1)
-            sRenderer.flipX = true;
-            animator.speed = 0.1F;
-            animator.Play("Walk");
-        }
-        else if (_moveInput > 0){
-            
-            sRenderer.flipX = false;
-            animator.speed = 0.1F;
-            animator.Play("Walk");
-        }
-       
-
     }
 
     private void Move()
@@ -104,21 +90,26 @@ public class PlayerController : MonoBehaviour
             rb.gravityScale = 1;
         }
 
+        // Are we landing?
+        if(_isJumping && _isGrounded && _velocity.y <= 0)
+        {
+            _isJumping = false;
+        }
+
         // Are we initializing a jump?
         if (_jumpDesired && _isGrounded)
         {
-            
+            _isJumping = true;
             _jumpSpeed = Mathf.Sqrt(-2f * Physics2D.gravity.y * jumpHeight * upwardMobility);
 
             _velocity.y = _jumpSpeed;
-            animator.SetTrigger("Jump");
         }
         _jumpDesired = false;
     }
 
     private void OnDrawGizmos()
     {
-        if(_isGrounded)
+        if(_isJumping)
         {
             Gizmos.color = Color.green;
         } else
