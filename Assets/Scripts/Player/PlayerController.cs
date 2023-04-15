@@ -51,6 +51,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
+
         // How fast do we accelerate down?
         if(_velocity.y > 0)
         {
@@ -58,10 +59,13 @@ public class PlayerController : MonoBehaviour
         } else if(_velocity.y < 0)
         {
             rb.gravityScale = downwardMobility;
+        } else
+        {
+            rb.gravityScale = 1;
         }
 
         // Are we initializing a jump?
-        if(_jumpDesired && colCheck.IsGrounded())
+        if (_jumpDesired && colCheck.IsGrounded())
         {
             _jumpSpeed = Mathf.Sqrt(-2f * Physics2D.gravity.y * jumpHeight * upwardMobility);
 
