@@ -11,16 +11,23 @@ public class PlayerController : MonoBehaviour
     private PlayerInput input;
     private Rigidbody2D rb;
 
-    // Start is called before the first frame update
+    private float currentMoveSpeed = 0f;
+
     void Start()
     {
         input = new PlayerInput();
+        input.Enable();
         rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        currentMoveSpeed = input.Player.Move.ReadValue<float>();
+        Debug.Log(currentMoveSpeed);
+    }
+
+    private void FixedUpdate()
+    {
+        rb.velocity = new Vector2(currentMoveSpeed * moveSpeed * Time.fixedDeltaTime, rb.velocity.y);
     }
 }
