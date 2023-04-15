@@ -6,12 +6,12 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float upwardMobility;
-    [SerializeField] private float downwardMobility;
-    [SerializeField] private float jumpHeight;
-
-
+    [SerializeField, Range(0, 1000)] private float moveSpeed;
+    [SerializeField, Range(0, 5)] private float upwardMobility;
+    [SerializeField, Range(0, 5)] private float downwardMobility;
+    [SerializeField, Range(0, 10)] private float jumpHeight;
+    [SerializeField, Range(0, 30)] private float airVelocityChange;
+    [SerializeField, Range(0, 1000)] private float velocityChange;
 
     private PlayerInput input;
     private Rigidbody2D rb;
@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _velocity;
     private bool _isGrounded;
     private bool _isJumping = false;
+    private float _velocityChange = 0f;
 
     private Animator animator;
     private SpriteRenderer sRenderer; 
@@ -62,6 +63,14 @@ public class PlayerController : MonoBehaviour
         _isGrounded = colCheck.IsGrounded();
         _velocity = rb.velocity;
 
+        if(_isGrounded)
+        {
+            _velocityChange = velocityChange;
+        } else
+        {
+            _velocityChange = airVelocityChange;
+        }
+
         Move();
         Jump();
         
@@ -71,7 +80,8 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        _velocity = new Vector2(_moveInput * moveSpeed * Time.fixedDeltaTime, _velocity.y);
+        _velocity.x = Mathf.MoveTowards(_velocity.x, _moveInput * moveSpeed * Time.fixedDeltaTime, _velocityChange * Time.fixedDeltaTime);
+        //_velocity = new Vector2(_moveInput * moveSpeed * Time.fixedDeltaTime, _velocity.y);
     }
 
     private void Jump()
