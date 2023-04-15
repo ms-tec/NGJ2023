@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     // Movement calculation
     private float _jumpSpeed;
     private Vector2 _velocity;
+    private bool _isGrounded;
 
     private Animator animator;
     private SpriteRenderer sRenderer; 
@@ -42,11 +43,12 @@ public class PlayerController : MonoBehaviour
     }
 
     private void update(){
-        animator.SetBool("Grounded", colCheck);
+        animator.SetBool("Grounded", _isGrounded);
     }
 
     private void FixedUpdate()
     {
+        _isGrounded = colCheck.IsGrounded();
         _velocity = rb.velocity;
 
         Move();
@@ -90,7 +92,7 @@ public class PlayerController : MonoBehaviour
     {
 
         // How fast do we accelerate down?
-        if(_velocity.y > 0)
+        if(_velocity.y > 0 && !_isGrounded)
         {
             rb.gravityScale = upwardMobility;
             
@@ -103,14 +105,26 @@ public class PlayerController : MonoBehaviour
         }
 
         // Are we initializing a jump?
-        if (_jumpDesired && colCheck.IsGrounded())
+        if (_jumpDesired && _isGrounded)
         {
             
             _jumpSpeed = Mathf.Sqrt(-2f * Physics2D.gravity.y * jumpHeight * upwardMobility);
 
-            _velocity.y += _jumpSpeed;
+            _velocity.y = _jumpSpeed;
             animator.SetTrigger("Jump");
         }
         _jumpDesired = false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if(_isGrounded)
+        {
+            Gizmos.color = Color.green;
+        } else
+        {
+            Gizmos.color = Color.red;
+        }
+        Gizmos.DrawWireSphere(transform.position + 0.5f * Vector3.up, 0.5f);
     }
 }
