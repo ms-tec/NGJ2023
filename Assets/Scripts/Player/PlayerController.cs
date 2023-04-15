@@ -55,18 +55,19 @@ public class PlayerController : MonoBehaviour
 
     private void Animate()
     {
-        if (Mathf.Abs(_moveInput) < 0.1) {
+        Debug.Log(Mathf.Abs(_moveInput));
+        if (Mathf.Abs(_moveInput) < 0.1 && Mathf.Abs(_moveInput) > -0.1 ) {
             animator.Play("Idle");
             
         }
-        else if (Mathf.Abs(_moveInput) > 0.1){
+        else if (_moveInput < 0){
             
             //transform.scale = new Vector3(-1,1,1)
             sRenderer.flipX = true;
             animator.speed = 0.1F;
             animator.Play("Walk");
         }
-        else if (Mathf.Abs(_moveInput) < -0.1){
+        else if (_moveInput > 0){
             
             sRenderer.flipX = false;
             animator.speed = 0.1F;
