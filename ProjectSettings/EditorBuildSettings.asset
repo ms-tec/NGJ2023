@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/TestMaya.unity
+    guid: d6739f5c135a2a442b88858d71d93026
+  - enabled: 1
+    path: Assets/Scenes/WinScene.unity
+    guid: 09f620e41f6cc1644ae53ca043f09918
   m_configObjects: {}
