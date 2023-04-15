@@ -7,28 +7,27 @@ public class CameraController : MonoBehaviour
     public GameObject player;
     public float offset;
     public float offsetSmoothing;
+    public float offsetSensitivity = 0.5f;
+
     private Vector3 playerPosition;
     private Vector3 lastPosition;
     private Vector3 targetPosition;
     private float lastMoveDir;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame 
     // Sammenlign camerapos  
     void Update()
     {   
 
-        playerPosition = new Vector3(player.transform.position.x, player.transform.position.y, transform.position.z); 
-        targetPosition = playerPosition;  
-        if (playerPosition.x > lastPosition.x){
+        playerPosition = new Vector3(player.transform.position.x, player.transform.position.y, transform.position.z);
+        targetPosition = playerPosition;
+        if (playerPosition.x > lastPosition.x + offsetSensitivity){
             lastMoveDir = 1;
+            lastPosition = playerPosition;
         }
-        else if(playerPosition.x < lastPosition.x) {
+        else if(playerPosition.x < lastPosition.x - offsetSensitivity) {
             lastMoveDir = -1;
+            lastPosition = playerPosition;
         }
         targetPosition.x += offset * lastMoveDir;
         Debug.Log("Player: " + playerPosition);
@@ -36,6 +35,5 @@ public class CameraController : MonoBehaviour
         
         transform.position = Vector3.Lerp(transform.position, targetPosition, offsetSmoothing * Time.deltaTime);
         
-        lastPosition = playerPosition;
     }
 }
