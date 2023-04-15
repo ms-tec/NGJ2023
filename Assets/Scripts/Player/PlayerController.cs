@@ -121,7 +121,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Are we initializing a jump?
-        if (_jumpDesired && (_isGrounded || _coyoteTime > 0))
+        if (_jumpDesired && (_isGrounded || _coyoteTime > 0) && !_isJumping)
         {
             _isJumping = true;
             _getOffGroundTime = getOffGroundTime;
