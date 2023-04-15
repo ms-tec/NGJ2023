@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float downwardMobility;
     [SerializeField] private float jumpHeight;
 
+
+
     private PlayerInput input;
     private Rigidbody2D rb;
     private CheckCollision colCheck;
@@ -23,15 +25,24 @@ public class PlayerController : MonoBehaviour
     private float _jumpSpeed;
     private Vector2 _velocity;
 
+    private Animator animator;
+    private SpriteRenderer sRenderer; 
+
     void Start()
     {
         colCheck = GetComponent<CheckCollision>();
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        sRenderer = GetComponent<SpriteRenderer>(); 
         input = new PlayerInput();
         input.Enable();
         input.Player.Move.performed += ctx => _moveInput = ctx.ReadValue<float>();
         input.Player.Move.canceled += _ => _moveInput = 0;
         input.Player.Jump.started += _ => _jumpDesired = true;
+    }
+
+    private void update(){
+        animator.SetBool("Grounded", colCheck);
     }
 
     private void FixedUpdate()
@@ -40,8 +51,34 @@ public class PlayerController : MonoBehaviour
 
         Move();
         Jump();
+        Animate();
+        
 
         rb.velocity = _velocity;
+    }
+
+    private void Animate()
+    {
+        Debug.Log(Mathf.Abs(_moveInput));
+        if (Mathf.Abs(_moveInput) < 0.1 && Mathf.Abs(_moveInput) > -0.1 ) {
+            animator.Play("Idle");
+            
+        }
+        else if (_moveInput < 0){
+            
+            //transform.scale = new Vector3(-1,1,1)
+            sRenderer.flipX = true;
+            animator.speed = 0.1F;
+            animator.Play("Walk");
+        }
+        else if (_moveInput > 0){
+            
+            sRenderer.flipX = false;
+            animator.speed = 0.1F;
+            animator.Play("Walk");
+        }
+       
+
     }
 
     private void Move()
@@ -56,6 +93,7 @@ public class PlayerController : MonoBehaviour
         if(_velocity.y > 0)
         {
             rb.gravityScale = upwardMobility;
+            
         } else if(_velocity.y < 0)
         {
             rb.gravityScale = downwardMobility;
@@ -67,9 +105,11 @@ public class PlayerController : MonoBehaviour
         // Are we initializing a jump?
         if (_jumpDesired && colCheck.IsGrounded())
         {
+            
             _jumpSpeed = Mathf.Sqrt(-2f * Physics2D.gravity.y * jumpHeight * upwardMobility);
 
             _velocity.y += _jumpSpeed;
+            animator.SetTrigger("Jump");
         }
         _jumpDesired = false;
     }
