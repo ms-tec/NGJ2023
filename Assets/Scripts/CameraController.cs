@@ -9,6 +9,8 @@ public class CameraController : MonoBehaviour
     public float offsetSmoothing;
     private Vector3 playerPosition;
     private Vector3 lastPosition;
+    private Vector3 targetPosition;
+    private float lastMoveDir;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,15 +21,21 @@ public class CameraController : MonoBehaviour
     // Sammenlign camerapos  
     void Update()
     {   
-        playerPosition = new Vector3(player.transform.position.x, player.transform.position.y, transform.position.z);   
-        if (playerPosition.x <= lastPosition.x){
-            playerPosition = new Vector3(playerPosition.x - offset, playerPosition.y, playerPosition.z);
-        }
-        else {
-            playerPosition = new Vector3(playerPosition.x + offset, playerPosition.y, playerPosition.z);
-        }
 
-        transform.position = Vector3.Lerp(transform.position, playerPosition, offsetSmoothing * Time.deltaTime);
+        playerPosition = new Vector3(player.transform.position.x, player.transform.position.y, transform.position.z); 
+        targetPosition = playerPosition;  
+        if (playerPosition.x > lastPosition.x){
+            lastMoveDir = 1;
+        }
+        else if(playerPosition.x < lastPosition.x) {
+            lastMoveDir = -1;
+        }
+        targetPosition.x += offset * lastMoveDir;
+        Debug.Log("Player: " + playerPosition);
+        Debug.Log("Target: " + targetPosition);
+        
+        transform.position = Vector3.Lerp(transform.position, targetPosition, offsetSmoothing * Time.deltaTime);
+        
         lastPosition = playerPosition;
     }
 }
