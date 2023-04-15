@@ -41,6 +41,10 @@ public class PlayerController : MonoBehaviour
         input.Player.Jump.started += _ => _jumpDesired = true;
     }
 
+    private void update(){
+        animator.SetBool("Grounded", colCheck);
+    }
+
     private void FixedUpdate()
     {
         _velocity = rb.velocity;
@@ -88,6 +92,7 @@ public class PlayerController : MonoBehaviour
         if(_velocity.y > 0)
         {
             rb.gravityScale = upwardMobility;
+            
         } else if(_velocity.y < 0)
         {
             rb.gravityScale = downwardMobility;
@@ -96,9 +101,11 @@ public class PlayerController : MonoBehaviour
         // Are we initializing a jump?
         if(_jumpDesired && colCheck.IsGrounded())
         {
+            
             _jumpSpeed = Mathf.Sqrt(-2f * Physics2D.gravity.y * jumpHeight * upwardMobility);
 
             _velocity.y += _jumpSpeed;
+            animator.SetTrigger("Jump");
         }
         _jumpDesired = false;
     }
