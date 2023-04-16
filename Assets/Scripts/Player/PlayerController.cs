@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviour
         sRenderer = GetComponent<SpriteRenderer>(); 
         input = new PlayerInput();
         input.Enable();
+        
         input.Player.Move.performed += ctx => _moveInput = ctx.ReadValue<float>();
         input.Player.Move.canceled += _ => _moveInput = 0;
         input.Player.Jump.started += _ => _jumpDesired = true;
