@@ -7,7 +7,6 @@ public class CheckCollision : MonoBehaviour
     [SerializeField, Range(0, 90)] private float maxSlopeAngle = 30;
 
     private bool grounded = false;
-    private ContactPoint2D[] contacts = new ContactPoint2D[10];
 
     public bool IsGrounded()
     {
@@ -31,11 +30,11 @@ public class CheckCollision : MonoBehaviour
 
     void EvaluateCollision(Collision2D collision)
     {
-        collision.GetContacts(contacts);
-        foreach (ContactPoint2D contact in contacts)
+        for(int i = 0; i < collision.contactCount; i++)
         {
-            float angle = Vector2.Angle(contact.normal, Vector2.up);
-            if (angle < maxSlopeAngle)
+            ContactPoint2D contact = collision.GetContact(i);
+            float angle = Vector2.SignedAngle(contact.normal, Vector2.up);
+            if (Mathf.Abs(angle) < maxSlopeAngle)
             {
                 grounded = true;
             }

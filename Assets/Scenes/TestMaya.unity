@@ -1069,7 +1069,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 300
   velocityChange: 263
-  jumpHeight: 3
+  jumpHeight: 3.5
   upwardMobility: 1.7
   downwardMobility: 3
   airVelocityChange: 6.2
