@@ -7,21 +7,30 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField, Range(0, 1000)] private float moveSpeed;
+    [SerializeField, Range(0, 1000)] private float velocityChange;
+
+    [Header("Jumping")]
+    [SerializeField, Range(0, 10)] private float jumpHeight;
     [SerializeField, Range(0, 5)] private float upwardMobility;
     [SerializeField, Range(0, 5)] private float downwardMobility;
-    [SerializeField, Range(0, 10)] private float jumpHeight;
-    [SerializeField, Range(0, 1)] private float getOffGroundTime = 0.1f;
     [SerializeField, Range(0, 30)] private float airVelocityChange;
-    [SerializeField, Range(0, 1000)] private float velocityChange;
+    [SerializeField, Range(0, 1)] private float getOffGroundTime = 0.1f;
     [SerializeField, Range(0, 2)] private float coyoteTime;
+
+    [Header("Jetpack")]
+    [SerializeField, Range(0, 1000)] private float jetpackSpeed;
 
     private PlayerInput input;
     private Rigidbody2D rb;
     private CheckCollision colCheck;
 
+    // Jetpack
+    [HideInInspector] public bool _hasJetpack = false;
+
     // Movement input
     private float _moveInput = 0f;
     private bool _jumpDesired = false;
+    private bool _jetpackDesired = false;
 
     // Movement calculation
     private float _jumpSpeed;
@@ -48,12 +57,13 @@ public class PlayerController : MonoBehaviour
         input.Player.Move.performed += ctx => _moveInput = ctx.ReadValue<float>();
         input.Player.Move.canceled += _ => _moveInput = 0;
         input.Player.Jump.started += _ => _jumpDesired = true;
+        input.Player.Jetpack.performed += _ => _jetpackDesired = true;
+        input.Player.Jetpack.canceled += _ => _jetpackDesired = false;
     }
 
     private void Update() {
         animator.SetBool("Jumping", _isJumping);
         animator.SetFloat("moveSpeed", Mathf.Abs(_moveInput));
-        Debug.Log("Jumping: " + _isJumping);
 
         if (_moveInput < 0)
         {
@@ -70,7 +80,8 @@ public class PlayerController : MonoBehaviour
         _isGrounded = colCheck.IsGrounded();
         _velocity = rb.velocity;
 
-        if(_isGrounded)
+        bool jetpack = _hasJetpack && _jetpackDesired;
+        if(_isGrounded || jetpack)
         {
             _velocityChange = velocityChange;
             _coyoteTime = coyoteTime;
@@ -83,6 +94,7 @@ public class PlayerController : MonoBehaviour
 
         Move();
         Jump();
+        Jetpack();
         
 
         rb.velocity = _velocity;
@@ -134,6 +146,15 @@ public class PlayerController : MonoBehaviour
             //_velocity.y = 0;
         }
         _jumpDesired = false;
+    }
+
+    private void Jetpack()
+    {
+        Debug.Log("Jetpack: " + _jetpackDesired);
+        if(_jetpackDesired && _hasJetpack)
+        {
+            _velocity.y = jetpackSpeed * Time.fixedDeltaTime;
+        }
     }
 
     private void OnDrawGizmos()

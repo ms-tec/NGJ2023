@@ -44,6 +44,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jetpack"",
+                    ""type"": ""Button"",
+                    ""id"": ""f452757c-e7e6-41ec-bd54-6922015c0f8e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -123,6 +132,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8cba2095-f961-43ee-b692-546a02dabf8b"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Default Controls"",
+                    ""action"": ""Jetpack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -150,6 +170,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_Jetpack = m_Player.FindAction("Jetpack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -213,12 +234,14 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_Jetpack;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
         public PlayerActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @Jetpack => m_Wrapper.m_Player_Jetpack;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -234,6 +257,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
+            @Jetpack.started += instance.OnJetpack;
+            @Jetpack.performed += instance.OnJetpack;
+            @Jetpack.canceled += instance.OnJetpack;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -244,6 +270,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
+            @Jetpack.started -= instance.OnJetpack;
+            @Jetpack.performed -= instance.OnJetpack;
+            @Jetpack.canceled -= instance.OnJetpack;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -274,5 +303,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnJetpack(InputAction.CallbackContext context);
     }
 }

@@ -22,6 +22,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Jetpack",
+                    "type": "Button",
+                    "id": "f452757c-e7e6-41ec-bd54-6922015c0f8e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -99,6 +108,17 @@
                     "processors": "",
                     "groups": "Default Controls",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8cba2095-f961-43ee-b692-546a02dabf8b",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Default Controls",
+                    "action": "Jetpack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
