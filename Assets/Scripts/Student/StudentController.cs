@@ -8,6 +8,7 @@ public class StudentController : MonoBehaviour
     public GameObject[] objectsToSpawn;
     public GameObject player;
     public GameObject speech;
+    [SerializeField, Range(1, 10)] private float speechTime;
     
     float timer;
 
@@ -15,7 +16,7 @@ public class StudentController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(speech, 7f);
+        Destroy(speech, speechTime);
     }
     /*
     Max levetid -> Objektet selv
@@ -30,7 +31,7 @@ public class StudentController : MonoBehaviour
         if(timer >= interval)
         {
             counter = (counter + 1) % objectsToSpawn.Length;
-            GameObject newSwear = Instantiate(objectsToSpawn[counter], transform.position, transform.rotation);
+            Instantiate(objectsToSpawn[counter], transform.position, transform.rotation);
             //newSwear.GetComponent<SwearController>().player = player;
             timer -= interval;
             
