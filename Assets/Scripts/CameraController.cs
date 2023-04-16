@@ -72,6 +72,7 @@ public class CameraController : MonoBehaviour
         while (timeElapsed < establishingShotDuration)
         {
             lerpFactor = timeElapsed / establishingShotDuration;
+            lerpFactor *= lerpFactor;
             timeElapsed += Time.deltaTime;
             camera.orthographicSize = Mathf.Lerp(initialSize, targetSize, lerpFactor);
             transform.position = Vector3.Lerp(initialPosition, targetPosition, lerpFactor);

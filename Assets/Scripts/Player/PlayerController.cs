@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Jetpack")]
     [SerializeField, Range(0, 1000)] private float jetpackSpeed;
+    [SerializeField, Range(0, 100)] private int maxFuel;
+    [SerializeField, Range(0, 100)] private int jetpackFuelPerSwear;
 
     private PlayerInput input;
     private Rigidbody2D rb;
@@ -26,6 +28,10 @@ public class PlayerController : MonoBehaviour
 
     // Jetpack
     [HideInInspector] public bool _hasJetpack = false;
+    private bool _isFlying = false;
+    private bool _jetpackActive = false;
+    private int _jetpackFuel = 3;
+    private float _jetpackFuelTimer = 1;
 
     // Movement input
     private float _moveInput = 0f;
@@ -64,6 +70,8 @@ public class PlayerController : MonoBehaviour
     private void Update() {
         animator.SetBool("Jumping", _isJumping);
         animator.SetFloat("moveSpeed", Mathf.Abs(_moveInput));
+        animator.SetBool("Flying", _isFlying);
+        animator.SetBool("JetpackActive", _isFlying && _jetpackActive);
 
         if (_moveInput < 0)
         {
@@ -80,8 +88,7 @@ public class PlayerController : MonoBehaviour
         _isGrounded = colCheck.IsGrounded();
         _velocity = rb.velocity;
 
-        bool jetpack = _hasJetpack && _jetpackDesired;
-        if(_isGrounded || jetpack)
+        if(_isGrounded || _jetpackActive)
         {
             _velocityChange = velocityChange;
             _coyoteTime = coyoteTime;
@@ -95,6 +102,7 @@ public class PlayerController : MonoBehaviour
         Move();
         Jump();
         Jetpack();
+        JetpackFuel();
         
 
         rb.velocity = _velocity;
@@ -150,10 +158,52 @@ public class PlayerController : MonoBehaviour
 
     private void Jetpack()
     {
-        Debug.Log("Jetpack: " + _jetpackDesired);
-        if(_jetpackDesired && _hasJetpack)
+        Debug.Log("Jetpack: " + _jetpackActive);
+        if (_isFlying && _isGrounded && _getOffGroundTime <= 0)
         {
+            _isFlying = false;
+        } else if(_isFlying)
+        {
+            _getOffGroundTime -= Time.fixedDeltaTime;
+        }
+
+        if (_jetpackDesired && _hasJetpack && _jetpackFuel > 0)
+        {
+            _isFlying = true;
+            _jetpackActive = true;
+            _isJumping = false;
             _velocity.y = jetpackSpeed * Time.fixedDeltaTime;
+            if(_isGrounded)
+            {
+                _getOffGroundTime = getOffGroundTime;
+            }
+        } else
+        {
+            _jetpackActive = false;
+        }
+    }
+
+    void JetpackFuel()
+    {
+        if(_jetpackActive)
+        {
+            if(_jetpackFuelTimer <= 0)
+            {
+                _jetpackFuelTimer = 1;
+                _jetpackFuel -= 1;
+            } else
+            {
+                _jetpackFuelTimer -= Time.fixedDeltaTime;
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Swear"))
+        {
+            Destroy(collision.gameObject);
+            _jetpackFuel = Mathf.Min(_jetpackFuel + jetpackFuelPerSwear, maxFuel);
         }
     }
 

@@ -29,7 +29,7 @@ public class StudentController : MonoBehaviour
         timer += Time.deltaTime;
         if(timer >= interval)
         {
-            if(counter < 4) counter += 1; else counter = 0;
+            counter = (counter + 1) % objectsToSpawn.Length;
             GameObject newSwear = Instantiate(objectsToSpawn[counter], transform.position, transform.rotation);
             //newSwear.GetComponent<SwearController>().player = player;
             timer -= interval;
