@@ -5,6 +5,7 @@ using UnityEngine;
 public class SwearController : MonoBehaviour
 {
     public GameObject player;
+    public GameObject speech;
     private Vector3 playerPos;
     private float ranNum; 
     public float speed = 30.0f;
@@ -12,7 +13,7 @@ public class SwearController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {   
-        
+        Destroy(speech, 3f);
         player = GameObject.FindWithTag("Player");
         ranNum = Random.Range(-10.0f, 10.0f);
         playerPos = new Vector3(player.transform.position.x + ranNum, player.transform.position.y, player.transform.position.z);
