@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CheckCollision))]
 public class PlayerController : MonoBehaviour
@@ -129,7 +130,12 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        _velocity.x = Mathf.MoveTowards(_velocity.x, _moveInput * moveSpeed * Time.fixedDeltaTime, _velocityChange * Time.fixedDeltaTime);
+        float speed = moveSpeed;
+        if(_jetpackActive)
+        {
+            speed = jetpackSpeed;
+        }
+        _velocity.x = Mathf.MoveTowards(_velocity.x, _moveInput * speed * Time.fixedDeltaTime, _velocityChange * Time.fixedDeltaTime);
     }
 
     private void Jump()
@@ -229,6 +235,7 @@ public class PlayerController : MonoBehaviour
             sRenderer.flipX = false;
             animator.SetTrigger("Die");
             Deactivate();
+            StartCoroutine(ReloadGame());
         }
     }
 
@@ -242,5 +249,11 @@ public class PlayerController : MonoBehaviour
             Gizmos.color = Color.red;
         }
         Gizmos.DrawWireSphere(transform.position + 0.5f * Vector3.up, 0.5f);
+    }
+
+    private IEnumerator ReloadGame()
+    {
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene("TestMaya");
     }
 }
