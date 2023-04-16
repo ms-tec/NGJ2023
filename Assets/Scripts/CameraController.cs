@@ -79,5 +79,6 @@ public class CameraController : MonoBehaviour
             yield return null;
         }
         playerActive = true;
+        player.GetComponent<PlayerController>().Activate();
     }
 }

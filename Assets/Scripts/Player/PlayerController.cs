@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private CheckCollision colCheck;
 
+    [HideInInspector] public bool _playerActive = false;
+
     // Jetpack
     [HideInInspector] public bool _hasJetpack = false;
     private bool _isFlying = false;
@@ -67,19 +69,34 @@ public class PlayerController : MonoBehaviour
         input.Player.Jetpack.canceled += _ => _jetpackDesired = false;
     }
 
-    private void Update() {
+    public void Activate()
+    {
+        _playerActive = true;
+    }
+
+    public void Deactivate()
+    {
+        _playerActive = false;
+        animator.SetFloat("moveSpeed", 0);
+    }
+
+    private void Update()
+    {
         animator.SetBool("Jumping", _isJumping);
-        animator.SetFloat("moveSpeed", Mathf.Abs(_moveInput));
         animator.SetBool("Flying", _isFlying);
         animator.SetBool("JetpackActive", _isFlying && _jetpackActive);
+        if (_playerActive)
+        {
+            animator.SetFloat("moveSpeed", Mathf.Abs(_moveInput));
 
-        if (_moveInput < 0)
-        {
-            sRenderer.flipX = true;
-        }
-        else if (_moveInput > 0)
-        {
-            sRenderer.flipX = false;
+            if (_moveInput < 0)
+            {
+                sRenderer.flipX = true;
+            }
+            else if (_moveInput > 0)
+            {
+                sRenderer.flipX = false;
+            }
         }
     }
 
@@ -99,11 +116,13 @@ public class PlayerController : MonoBehaviour
             _coyoteTime -= Time.deltaTime;
         }
 
-        Move();
-        Jump();
-        Jetpack();
-        JetpackFuel();
-        
+        if(_playerActive)
+        {
+            Move();
+            Jump();
+            Jetpack();
+            JetpackFuel();
+        }
 
         rb.velocity = _velocity;
     }
@@ -204,6 +223,10 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(collision.gameObject);
             _jetpackFuel = Mathf.Min(_jetpackFuel + jetpackFuelPerSwear, maxFuel);
+        }
+        else if(collision.CompareTag("Enemy"))
+        {
+            Deactivate();
         }
     }
 
