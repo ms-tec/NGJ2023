@@ -226,6 +226,7 @@ public class PlayerController : MonoBehaviour
         }
         else if(collision.CompareTag("Enemy"))
         {
+            sRenderer.flipX = false;
             animator.SetTrigger("Die");
             Deactivate();
         }
