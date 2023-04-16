@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Jetpack")]
     [SerializeField, Range(0, 1000)] private float jetpackSpeed;
+    [SerializeField, Range(0, 100)] private int maxFuel;
+    [SerializeField, Range(0, 100)] private int jetpackFuelPerSwear;
 
     private PlayerInput input;
     private Rigidbody2D rb;
@@ -28,6 +30,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool _hasJetpack = false;
     private bool _isFlying = false;
     private bool _jetpackActive = false;
+    private int _jetpackFuel = 3;
+    private float _jetpackFuelTimer = 1;
 
     // Movement input
     private float _moveInput = 0f;
@@ -98,6 +102,7 @@ public class PlayerController : MonoBehaviour
         Move();
         Jump();
         Jetpack();
+        JetpackFuel();
         
 
         rb.velocity = _velocity;
@@ -153,7 +158,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jetpack()
     {
-        Debug.Log("Jetpack: " + _jetpackDesired);
+        Debug.Log("Jetpack: " + _jetpackActive);
         if (_isFlying && _isGrounded && _getOffGroundTime <= 0)
         {
             _isFlying = false;
@@ -162,7 +167,7 @@ public class PlayerController : MonoBehaviour
             _getOffGroundTime -= Time.fixedDeltaTime;
         }
 
-        if (_jetpackDesired && _hasJetpack)
+        if (_jetpackDesired && _hasJetpack && _jetpackFuel > 0)
         {
             _isFlying = true;
             _jetpackActive = true;
@@ -175,6 +180,30 @@ public class PlayerController : MonoBehaviour
         } else
         {
             _jetpackActive = false;
+        }
+    }
+
+    void JetpackFuel()
+    {
+        if(_jetpackActive)
+        {
+            if(_jetpackFuelTimer <= 0)
+            {
+                _jetpackFuelTimer = 1;
+                _jetpackFuel -= 1;
+            } else
+            {
+                _jetpackFuelTimer -= Time.fixedDeltaTime;
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Swear"))
+        {
+            Destroy(collision.gameObject);
+            _jetpackFuel = Mathf.Min(_jetpackFuel + jetpackFuelPerSwear, maxFuel);
         }
     }
 

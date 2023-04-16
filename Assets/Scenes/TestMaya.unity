@@ -1077,6 +1077,8 @@ MonoBehaviour:
   getOffGroundTime: 0.1
   coyoteTime: 0.436
   jetpackSpeed: 602
+  maxFuel: 10
+  jetpackFuelPerSwear: 5
   _hasJetpack: 0
 --- !u!114 &1294793585
 MonoBehaviour:
