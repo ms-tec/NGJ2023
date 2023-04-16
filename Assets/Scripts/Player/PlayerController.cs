@@ -25,9 +25,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Range(0, 100)] private int jetpackFuelPerSwear;
     [SerializeField] private TextMeshProUGUI fuelText;
 
+    [Header("Audio")]
+    public AudioClip jumpSound;
+    public AudioClip jetpackSound;
+
     private PlayerInput input;
     private Rigidbody2D rb;
     private CheckCollision colCheck;
+    private new AudioSource audio;
 
     [HideInInspector] public bool _playerActive = false;
 
@@ -35,7 +40,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool _hasJetpack = false;
     private bool _isFlying = false;
     private bool _jetpackActive = false;
-    private int _jetpackFuel = 3;
+    private int _jetpackFuel = 1;
     private float _jetpackFuelTimer = 1;
 
     // Movement input
@@ -62,7 +67,8 @@ public class PlayerController : MonoBehaviour
         colCheck = GetComponent<CheckCollision>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        sRenderer = GetComponent<SpriteRenderer>(); 
+        sRenderer = GetComponent<SpriteRenderer>();
+        audio = GetComponent<AudioSource>();
         input = new PlayerInput();
         input.Enable();
         
@@ -179,6 +185,10 @@ public class PlayerController : MonoBehaviour
             _jumpSpeed = Mathf.Sqrt(-2f * Physics2D.gravity.y * jumpHeight * upwardMobility);
 
             _velocity.y = _jumpSpeed;
+
+            audio.clip = jumpSound;
+            audio.time = 0.4f;
+            audio.Play();
         } else if(!_isJumping && _isGrounded)
         {
             //_velocity.y = 0;
@@ -207,9 +217,19 @@ public class PlayerController : MonoBehaviour
             {
                 _getOffGroundTime = getOffGroundTime;
             }
+            audio.clip = jetpackSound;
+            if (!audio.isPlaying)
+            {
+                audio.Play();
+            }
         } else
         {
             _jetpackActive = false;
+        }
+
+        if(!_isJumping && !_jetpackActive)
+        {
+            audio.Stop();
         }
     }
 
@@ -221,6 +241,7 @@ public class PlayerController : MonoBehaviour
             {
                 _jetpackFuelTimer = 1;
                 _jetpackFuel -= 1;
+                fuelText.text = "Fuel: " + _jetpackFuel + "/" + maxFuel;
             } else
             {
                 _jetpackFuelTimer -= Time.fixedDeltaTime;
