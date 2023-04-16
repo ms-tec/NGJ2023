@@ -6,6 +6,7 @@ public class HandAttack : MonoBehaviour
 {
     public Transform positionUp;
     public Transform positionDown;
+    public float moveSpeed = 5;
 
     private Vector3 position;
     private Vector3 targetPosition;
@@ -24,14 +25,16 @@ public class HandAttack : MonoBehaviour
             targetPosition = positionUp.position;
         }
 
-        position = Vector3.MoveTowards(position, targetPosition, Time.deltaTime * 5);
+        position = Vector3.MoveTowards(position, targetPosition, Time.deltaTime * moveSpeed);
 
         transform.position = position;
     }
 
     public void Attack()
     {
-        Debug.Log(transform.position);
-        targetPosition = positionDown.position;
+        if (position == positionUp.position)
+        {
+            targetPosition = positionDown.position;
+        }
     }
 }

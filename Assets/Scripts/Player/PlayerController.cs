@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CheckCollision))]
 public class PlayerController : MonoBehaviour
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Range(0, 1000)] private float jetpackSpeed;
     [SerializeField, Range(0, 100)] private int maxFuel;
     [SerializeField, Range(0, 100)] private int jetpackFuelPerSwear;
+    [SerializeField] private TextMeshProUGUI fuelText;
 
     private PlayerInput input;
     private Rigidbody2D rb;
@@ -68,6 +70,8 @@ public class PlayerController : MonoBehaviour
         input.Player.Jump.started += _ => _jumpDesired = true;
         input.Player.Jetpack.performed += _ => _jetpackDesired = true;
         input.Player.Jetpack.canceled += _ => _jetpackDesired = false;
+
+        fuelText.text = "Fuel: " + _jetpackFuel + "/" + maxFuel;
     }
 
     public void Activate()
@@ -229,6 +233,7 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(collision.gameObject);
             _jetpackFuel = Mathf.Min(_jetpackFuel + jetpackFuelPerSwear, maxFuel);
+            fuelText.text = "Fuel: " + _jetpackFuel + "/" + maxFuel;
         }
         else if(collision.CompareTag("Enemy"))
         {
