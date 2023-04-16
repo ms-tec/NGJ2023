@@ -365,6 +365,56 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 1
+--- !u!1 &631129404
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 631129406}
+  - component: {fileID: 631129405}
+  m_Layer: 0
+  m_Name: SwearSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &631129405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631129404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31f8fc9bf97c1de4dac5c9363b804584, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interval: 5
+  objectsToSpawn:
+  - {fileID: 3352350119667265795, guid: 0ea11483e3940434aad5efdf25b23f55, type: 3}
+  - {fileID: 3352350119667265795, guid: f00b0714ce790944688deaf702855c41, type: 3}
+  - {fileID: 3352350119667265795, guid: 616180572b6bd6b49a3660b8fbe79975, type: 3}
+  - {fileID: 3352350119667265795, guid: 427c3c2c3dc99124ca66de15a8b6e017, type: 3}
+--- !u!4 &631129406
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631129404}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 36.55573, y: 29.206938, z: -0.1692684}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &903347685
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1028,7 +1078,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1294793579}
-  offset: 5
+  offsetX: 5
+  offsetY: 2
   offsetSmoothing: 4
   offsetSensitivity: 0.5
   targetSize: 5
