@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CheckCollision))]
 public class PlayerController : MonoBehaviour
@@ -21,6 +23,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Range(0, 1000)] private float jetpackSpeed;
     [SerializeField, Range(0, 100)] private int maxFuel;
     [SerializeField, Range(0, 100)] private int jetpackFuelPerSwear;
+    [SerializeField] private TextMeshProUGUI fuelText;
 
     private PlayerInput input;
     private Rigidbody2D rb;
@@ -67,6 +70,8 @@ public class PlayerController : MonoBehaviour
         input.Player.Jump.started += _ => _jumpDesired = true;
         input.Player.Jetpack.performed += _ => _jetpackDesired = true;
         input.Player.Jetpack.canceled += _ => _jetpackDesired = false;
+
+        fuelText.text = "Fuel: " + _jetpackFuel + "/" + maxFuel;
     }
 
     public void Activate()
@@ -129,7 +134,12 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        _velocity.x = Mathf.MoveTowards(_velocity.x, _moveInput * moveSpeed * Time.fixedDeltaTime, _velocityChange * Time.fixedDeltaTime);
+        float speed = moveSpeed;
+        if(_jetpackActive)
+        {
+            speed = jetpackSpeed;
+        }
+        _velocity.x = Mathf.MoveTowards(_velocity.x, _moveInput * speed * Time.fixedDeltaTime, _velocityChange * Time.fixedDeltaTime);
     }
 
     private void Jump()
@@ -223,12 +233,14 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(collision.gameObject);
             _jetpackFuel = Mathf.Min(_jetpackFuel + jetpackFuelPerSwear, maxFuel);
+            fuelText.text = "Fuel: " + _jetpackFuel + "/" + maxFuel;
         }
         else if(collision.CompareTag("Enemy"))
         {
             sRenderer.flipX = false;
             animator.SetTrigger("Die");
             Deactivate();
+            StartCoroutine(ReloadGame());
         }
     }
 
@@ -242,5 +254,11 @@ public class PlayerController : MonoBehaviour
             Gizmos.color = Color.red;
         }
         Gizmos.DrawWireSphere(transform.position + 0.5f * Vector3.up, 0.5f);
+    }
+
+    private IEnumerator ReloadGame()
+    {
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene("TestMaya");
     }
 }
