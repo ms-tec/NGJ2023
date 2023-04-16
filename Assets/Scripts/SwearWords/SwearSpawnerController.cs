@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class SwearSpawnerController : MonoBehaviour
 {
-    public float interval = 5;
+    public float interval = 2;
     public GameObject[] objectsToSpawn;
+    public GameObject player;
     
     float timer;
 
@@ -28,7 +29,8 @@ public class SwearSpawnerController : MonoBehaviour
         if(timer >= interval)
         {
             if(counter < 4) counter += 1; else counter = 0;
-            Instantiate(objectsToSpawn[counter], transform.position, transform.rotation);
+            GameObject newSwear = Instantiate(objectsToSpawn[counter], transform.position, transform.rotation);
+            newSwear.GetComponent<SwearController>().player = player;
             timer -= interval;
             
         }
