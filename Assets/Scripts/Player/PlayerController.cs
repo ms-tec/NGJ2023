@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
 
     // Jetpack
     [HideInInspector] public bool _hasJetpack = false;
+    private bool _isFlying = false;
+    private bool _jetpackActive = false;
 
     // Movement input
     private float _moveInput = 0f;
@@ -64,6 +66,8 @@ public class PlayerController : MonoBehaviour
     private void Update() {
         animator.SetBool("Jumping", _isJumping);
         animator.SetFloat("moveSpeed", Mathf.Abs(_moveInput));
+        animator.SetBool("Flying", _isFlying);
+        animator.SetBool("JetpackActive", _isFlying && _jetpackActive);
 
         if (_moveInput < 0)
         {
@@ -80,8 +84,7 @@ public class PlayerController : MonoBehaviour
         _isGrounded = colCheck.IsGrounded();
         _velocity = rb.velocity;
 
-        bool jetpack = _hasJetpack && _jetpackDesired;
-        if(_isGrounded || jetpack)
+        if(_isGrounded || _jetpackActive)
         {
             _velocityChange = velocityChange;
             _coyoteTime = coyoteTime;
@@ -151,9 +154,27 @@ public class PlayerController : MonoBehaviour
     private void Jetpack()
     {
         Debug.Log("Jetpack: " + _jetpackDesired);
-        if(_jetpackDesired && _hasJetpack)
+        if (_isFlying && _isGrounded && _getOffGroundTime <= 0)
         {
+            _isFlying = false;
+        } else if(_isFlying)
+        {
+            _getOffGroundTime -= Time.fixedDeltaTime;
+        }
+
+        if (_jetpackDesired && _hasJetpack)
+        {
+            _isFlying = true;
+            _jetpackActive = true;
+            _isJumping = false;
             _velocity.y = jetpackSpeed * Time.fixedDeltaTime;
+            if(_isGrounded)
+            {
+                _getOffGroundTime = getOffGroundTime;
+            }
+        } else
+        {
+            _jetpackActive = false;
         }
     }
 
