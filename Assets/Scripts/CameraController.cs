@@ -13,8 +13,8 @@ public class CameraController : MonoBehaviour
 
     [Header("Establishing shot")]
     [SerializeField] private float targetSize = 5;
-    [SerializeField] private float establishingShotDuration = 2f;
-    [SerializeField] private float establishingShotDelay = 1f;
+    [SerializeField] private float establishingShotDuration = 7f;
+    [SerializeField] private float establishingShotDelay = 7f;
 
     private Vector3 playerPosition;
     private Vector3 lastPosition;
