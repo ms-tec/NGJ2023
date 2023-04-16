@@ -250,7 +250,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &214922080
 Transform:
   m_ObjectHideFlags: 0
@@ -630,6 +630,7 @@ MonoBehaviour:
   getOffGroundTime: 0.1
   airVelocityChange: 6.2
   velocityChange: 263
+  coyoteTime: 0.436
 --- !u!114 &1294793585
 MonoBehaviour:
   m_ObjectHideFlags: 0

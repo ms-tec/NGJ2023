@@ -6,7 +6,8 @@ public class CameraController : MonoBehaviour
 {
     [Header("Follow player")]
     public GameObject player;
-    public float offset = 5;
+    public float offsetX = 5;
+    public float offsetY = 2;
     public float offsetSmoothing = 4;
     public float offsetSensitivity = 0.5f;
 
@@ -38,6 +39,7 @@ public class CameraController : MonoBehaviour
         {
             playerPosition = new Vector3(player.transform.position.x, player.transform.position.y, transform.position.z);
             targetPosition = playerPosition;
+            targetPosition.y += offsetY;
             if (playerPosition.x > lastPosition.x + offsetSensitivity)
             {
                 lastMoveDir = 1;
@@ -48,7 +50,7 @@ public class CameraController : MonoBehaviour
                 lastMoveDir = -1;
                 lastPosition = playerPosition;
             }
-            targetPosition.x += offset * lastMoveDir;
+            targetPosition.x += offsetX * lastMoveDir;
 
             transform.position = Vector3.Lerp(transform.position, targetPosition, offsetSmoothing * Time.deltaTime);
         }
@@ -66,6 +68,7 @@ public class CameraController : MonoBehaviour
 
         targetPosition = player.transform.position;
         targetPosition.z = transform.position.z;
+        targetPosition.y += offsetY;
         while (timeElapsed < establishingShotDuration)
         {
             lerpFactor = timeElapsed / establishingShotDuration;

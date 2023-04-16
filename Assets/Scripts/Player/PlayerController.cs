@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour
     private void Update() {
         animator.SetBool("Jumping", _isJumping);
         animator.SetFloat("moveSpeed", Mathf.Abs(_moveInput));
+        Debug.Log("Jumping: " + _isJumping);
 
         if (_moveInput < 0)
         {
@@ -115,7 +116,7 @@ public class PlayerController : MonoBehaviour
         if(_isJumping && _isGrounded && _getOffGroundTime <= 0)
         {
             _isJumping = false;
-        } else if(_isJumping && _isGrounded)
+        } else if(_isJumping)
         {
             _getOffGroundTime -= Time.fixedDeltaTime;
         }
