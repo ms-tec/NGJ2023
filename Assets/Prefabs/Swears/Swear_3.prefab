@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2919201848709845650}
   - component: {fileID: 7278395540446733028}
   - component: {fileID: 4835359549612701719}
+  - component: {fileID: 111824352648683692}
   m_Layer: 0
   m_Name: Swear_3
   m_TagString: Untagged
@@ -111,3 +112,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.108, y: 0.685}
   m_EdgeRadius: 0
+--- !u!114 &111824352648683692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3352350119667265795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a59d04e8edfe6e4fbda3d911a12bc6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  speed: 10

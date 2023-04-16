@@ -15,16 +15,22 @@ public class SwearSpawnerController : MonoBehaviour
     {
         
     }
-
+    /*
+    Max levetid -> Objektet selv
+    Bevægelse -> Objektet selv
+    Spiller fuel -> Spiller-objektet
+    Kaste hen mod spilleren (måske som en parabelbue)
+    */
     // Update is called once per frame
     void Update()
     {
         timer += Time.deltaTime;
         if(timer >= interval)
         {
+            if(counter < 4) counter += 1; else counter = 0;
             Instantiate(objectsToSpawn[counter], transform.position, transform.rotation);
             timer -= interval;
-            if(counter < 4) counter += 1; else counter = 0;
+            
         }
         
         
